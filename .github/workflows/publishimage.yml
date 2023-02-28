@@ -64,7 +64,10 @@ jobs:
 
       - name: Run command on server
         run: |
-          ssh ${SSH_OPTIONS} tholind@kthb-apps-1-r.referens.sys.kth.se '
-          cd ..
-          ls -la
-          '
+          ssh -o "GSSAPIAuthentication=yes" \
+              -o "GSSAPIDelegateCredentials=yes" \
+              -o "GSSAPIKeyExchange=yes" \
+              tholind@kthb-apps-1-r.referens.sys.kth.se '
+              cd ..
+              ls -la
+              '
