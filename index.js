@@ -12,6 +12,19 @@ const maildirPath = '/maildir';
 
 const newMailFiles = fs.readdirSync(path.join(maildirPath, 'new'));
 
+const timezoned = () => {
+    var options = {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        timeZone: 'Europe/Stockholm'
+    };
+    return new Date().toLocaleString('sv-SE', options);
+};
+
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.combine(
