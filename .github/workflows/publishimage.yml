@@ -37,7 +37,7 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
@@ -48,3 +48,27 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          
+  deploy:
+    needs: build-and-push-image
+    runs-on: ubuntu-latest
+    env:
+      SSH_OPTIONS: |
+        -o "PreferredAuthentications=gssapi-with-mic"
+        -o "GSSAPIAuthentication=yes"
+        -o "GSSAPIDelegateCredentials=yes"
+        -o "GSSAPIKeyExchange=yes"
+    steps:
+      - name: Install Kerberos dependencies
+        run: sudo apt-get install -y krb5-user
+
+      - name: Authenticate with Kerberos
+        run: | 
+          echo ${{ secrets.KB_PW }} | kinit ${{ variables.KB_USER }}
+
+      - name: Run command on server
+        run: |
+          ssh ${SSH_OPTIONS} tholind@kthb-apps-1-r.referens.sys.kth.se '
+          cd ..
+          ls -la
+          '
