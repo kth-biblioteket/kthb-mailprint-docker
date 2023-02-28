@@ -1,0 +1,18 @@
+version: "3.6"
+
+services:
+  mailprint:
+    container_name: "mailprint"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - "apps-net"
+    restart: "always"
+    volumes:
+      - "~/maildir:/maildir"
+      - "./mailprint.env:/app/.env"
+
+networks:
+  apps-net:
+    external: true

@@ -1,0 +1,25 @@
+{
+  "name": "kthb-mailprint-docker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kth-biblioteket/kthb-mailprint-docker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kth-biblioteket/kthb-mailprint-docker/issues"
+  },
+  "homepage": "https://github.com/kth-biblioteket/kthb-mailprint-docker#readme",
+  "dependencies": {
+    "chokidar": "^3.5.3",
+    "dotenv": "^16.0.3",
+    "mailparser": "^3.6.3",
+    "puppeteer": "^19.7.2"
+  }
+}
