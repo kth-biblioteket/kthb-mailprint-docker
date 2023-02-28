@@ -1,0 +1,50 @@
+name: Deploy to Linux Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      #- name: Set up SSH key
+      #  uses: webfactory/ssh-agent@v0.5.0
+      #  with:
+      #    ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Install Git Packages
+        run: |
+          sudo apt update && sudo apt install -y git
+
+      - name: Install Docker
+        run: |
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          sudo sh get-docker.sh
+
+      - name: Configure Docker CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+          sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+          sudo apt-get update
+          sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build Docker image
+        run: |
+          docker build -t ghcr.io/kth-biblioteket/kthb-mailprint-docker:${{ github.sha }} -f Dockerfile .
+
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/kth-biblioteket/kthb-mailprint-docker:${{ github.sha }}
+
+      #- name: Deploy Docker container
+      #  run: |
+      #    ssh username@your-server "docker pull ghcr.io/username/my-app:${{ github.sha }} && docker stop my-app && docker rm my-app && docker run -d --name=my-app -p 80:8080 ghcr.io/username/my-app:${{ github.sha }}"
