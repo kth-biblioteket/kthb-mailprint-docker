@@ -54,7 +54,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SSH_OPTIONS: |
-        -o "PreferredAuthentications=gssapi-with-mic"
         -o "GSSAPIAuthentication=yes"
         -o "GSSAPIDelegateCredentials=yes"
         -o "GSSAPIKeyExchange=yes"
