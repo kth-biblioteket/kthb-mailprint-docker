@@ -53,10 +53,7 @@ jobs:
     needs: build-and-push-image
     runs-on: ubuntu-latest
     env:
-      SSH_OPTIONS: |
-        -o "GSSAPIAuthentication=yes"
-        -o "GSSAPIDelegateCredentials=yes"
-        -o "GSSAPIKeyExchange=yes"
+      SSH_OPTIONS: -o "GSSAPIAuthentication=yes" -o "GSSAPIDelegateCredentials=yes" -o "GSSAPIKeyExchange=yes"
     steps:
       - name: Install Kerberos dependencies
         run: sudo apt-get install -y krb5-user
