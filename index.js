@@ -6,10 +6,25 @@ const simpleParser = require('mailparser').simpleParser;
 const puppeteer = require('puppeteer');
 const { exec } = require('child_process');
 const process = require("process");
+const winston = require('winston');
 
 const maildirPath = '/maildir';
 
 const newMailFiles = fs.readdirSync(path.join(maildirPath, 'new'));
+
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.combine(
+        winston.format.timestamp({
+            format: timezoned
+          }),
+        winston.format.json()
+    ),
+    defaultMeta: { service: 'user-service' },
+    transports: [
+      new winston.transports.File({ filename: 'combined.log' })
+    ]
+});
 
 function cmd(...command) {
     let p = exec(command[0], command.slice(1));
@@ -46,7 +61,6 @@ async function main() {
         .on('error', error => logger.log('error', `watcher.on.error: ${error}`))
         //Process som startas varje gång ett mail mottagits(fil adderats i mailfolder)
         .on('add', async filename => {
-            //newMailFiles.forEach(async filename => {
             let source = fs.createReadStream(path.join(maildirPath, 'new', filename));
             let parsed = await simpleParser(source);
             if (parsed.html) {
@@ -72,12 +86,12 @@ async function main() {
             await browser.close();
             fs.unlink(path.join(maildirPath, 'new', filename), function (error) {
                 if (error) {
-                    //logger.log('error',`watcher.on.add.source.on.open.printer.onjobend.unlink.emailfile: ${error}`);
+                    logger.log('error',`watcher.on.add.source.on.open.printer.onjobend.unlink.emailfile: ${error}`);
                     //outgoing_mail_message.text = `unlink error: ${error}`;
                     //outgoing_mail_message.html = `<p>unlink error: ${error}</p>`;
                     console.log(error)
                 }
-                //logger.log('info','File ' + appdir + maildir + path + ' removed successfully.');
+                logger.log('info','File ' + appdir + maildir + path + ' removed successfully.');
                 console.log('info', 'File ' + path.join(maildirPath, 'new', filename) + ' removed successfully.')
             });
 

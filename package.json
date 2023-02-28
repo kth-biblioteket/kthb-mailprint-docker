@@ -20,6 +20,7 @@
     "chokidar": "^3.5.3",
     "dotenv": "^16.0.3",
     "mailparser": "^3.6.3",
-    "puppeteer": "^19.7.2"
+    "puppeteer": "^19.7.2",
+    "winston": "^3.8.2"
   }
 }
