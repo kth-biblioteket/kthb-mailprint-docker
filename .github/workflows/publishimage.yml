@@ -64,7 +64,7 @@ jobs:
 
       - name: Authenticate with Kerberos
         run: | 
-          echo ${{ secrets.KB_PW }} | kinit ${{ variables.KB_USER }}
+          echo ${{ secrets.KB_PW }} | kinit ${{ vars.KB_USER }}
 
       - name: Run command on server
         run: |
