@@ -56,7 +56,7 @@ jobs:
       - name: Deploy docker container webhook
         uses: joelwmale/webhook-action@master
         with:
-          url: https://sites.lib.kth.se/deploy
+          url: https://sites.lib.kth.se/webhook/hooks/deploy
           # ${{ secrets.WEBHOOK_URL }}
           headers: '{"repository": "${{env.GITHUB_REPOSITORY}}"}'
           body: '{"event": "deployment", "repository": "${{env.GITHUB_REPOSITORY}}"}'
