@@ -49,25 +49,25 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           
-  deploy:
-    needs: build-and-push-image
-    runs-on: ubuntu-latest
-    env:
-      SSH_OPTIONS: -o "GSSAPIAuthentication=yes" -o "GSSAPIDelegateCredentials=yes" -o "GSSAPIKeyExchange=yes"
-    steps:
-      - name: deploy to kthb sitesd
-        uses: appleboy/ssh-action@master # An action made to control Linux servers
-        with: # We set all our secrets here for the action, these won't be shown in the action logs
-              host: sites.lib.kth.se
-              username: ${{ vars.KTHB_USER }}
-              password: ${{ secrets.KTHB_PW }}
-              port: 8967
-              script: |
-                cd ./docker/mailprint # we move into our app's folder
-                ls -la
-                docker compose pull
-                docker compose up -d
-        
+  # deploy:
+   # needs: build-and-push-image
+   # runs-on: ubuntu-latest
+   # env:
+   #   SSH_OPTIONS: -o "GSSAPIAuthentication=yes" -o "GSSAPIDelegateCredentials=yes" -o "GSSAPIKeyExchange=yes"
+    #steps:
+    # - name: deploy to kthb sitesd
+    #    uses: appleboy/ssh-action@master # An action made to control Linux servers
+    #    with: # We set all our secrets here for the action, these won't be shown in the action logs
+    #          host: sites.lib.kth.se
+    #          username: ${{ vars.KTHB_USER }}
+    #          password: ${{ secrets.KTHB_PW }}
+    #          port: 8967
+    #          script: |
+    #            cd ./docker/mailprint # we move into our app's folder
+    #            ls -la
+    #            docker compose pull
+    #            docker compose up -d
+    #    
       #- name: Install Kerberos dependencies
       #  run: sudo apt-get install -y krb5-user
         
