@@ -58,7 +58,7 @@ jobs:
         with:
           url: https://sites.lib.kth.se/webhook/hooks/deploy
           # ${{ secrets.WEBHOOK_URL }}
-          headers: '{"Content-Type": "application/json", "X-Hub-Signature": "4B8FC6578CE7363E7EF43B783B28A", "repository": "${{env.GITHUB_REPOSITORY}}"}'
+          headers: '{"X-Hub-Signature": "4B8FC6578CE7363E7EF43B783B28A"}'
           body: '{"event": "deployment", "repository": "${{env.GITHUB_REPOSITORY}}"}'
    # env:
    #   SSH_OPTIONS: -o "GSSAPIAuthentication=yes" -o "GSSAPIDelegateCredentials=yes" -o "GSSAPIKeyExchange=yes"
