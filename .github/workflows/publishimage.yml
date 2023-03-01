@@ -58,8 +58,8 @@ jobs:
         with:
           url: https://sites.lib.kth.se/deploy
           # ${{ secrets.WEBHOOK_URL }}
-          headers: '{"repository": "${{GITHUB_REPOSITORY}}"}'
-          body: '{"event": "deployment", "repository": "${{GITHUB_REPOSITORY}}"}'
+          headers: '{"repository": "${{env.GITHUB_REPOSITORY}}"}'
+          body: '{"event": "deployment", "repository": "${{env.GITHUB_REPOSITORY}}"}'
    # env:
    #   SSH_OPTIONS: -o "GSSAPIAuthentication=yes" -o "GSSAPIDelegateCredentials=yes" -o "GSSAPIKeyExchange=yes"
     #steps:
