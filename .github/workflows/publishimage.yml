@@ -41,25 +41,29 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+      #- name: Build and push Docker image
+      #  uses: docker/build-push-action@v3
+      #  with:
+      #    context: .
+      #    push: true
+      #   tags: ${{ steps.meta.outputs.tags }}
+      #    labels: ${{ steps.meta.outputs.labels }}
           
   deploy:
     needs: build-and-push-image
     runs-on: ubuntu-latest
     steps:
       - name: Deploy docker container webhook
-        uses: joelwmale/webhook-action@master
-        with:
-          url: https://sites.lib.kth.se/webhook/hooks/deploy
-          # ${{ secrets.WEBHOOK_URL }}
-          headers: '{"X-Hub-Signature": "4B8FC6578CE7363E7EF43B783B28A"}'
-          body: '{"event": "deployment", "repository": "${{env.GITHUB_REPOSITORY}}"}'
+        uses: distributhor/workflow-webhook@v2
+        env:
+          ## webhook_type: 'json-extended'
+          webhook_url: http://tholind.lib.kth.se:9000/webhook
+          ## webhook_url: https://sites.lib.kth.se/webhook/hooks/deploy
+          ## ${{ secrets.WEBHOOK_URL }}
+          webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
+          data: '{ "action": "deploy", "drink" : "beer" }'
+          ## headers: '{"X-Hub-Signature": "4B8FC6578CE7363E7EF43B783B28A"}'
+          ## body: '{"event": "deployment", "repository": "${{env.GITHUB_REPOSITORY}}"}'
    # env:
    #   SSH_OPTIONS: -o "GSSAPIAuthentication=yes" -o "GSSAPIDelegateCredentials=yes" -o "GSSAPIKeyExchange=yes"
     #steps:
