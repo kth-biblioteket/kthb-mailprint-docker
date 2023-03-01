@@ -57,8 +57,8 @@ jobs:
         uses: distributhor/workflow-webhook@v2
         env:
           ## webhook_type: 'json-extended'
-          webhook_url: http://tholind.lib.kth.se:9000/webhook
-          ## webhook_url: https://sites.lib.kth.se/webhook/hooks/deploy
+          ##webhook_url: http://tholind.lib.kth.se:9000/webhook
+          webhook_url: https://sites.lib.kth.se/webhook
           ## ${{ secrets.WEBHOOK_URL }}
           webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
           data: '{ "action": "deploy", "drink" : "beer" }'
