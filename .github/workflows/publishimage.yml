@@ -58,7 +58,7 @@ jobs:
         env:
           ## webhook_type: 'json-extended'
           ##webhook_url: http://tholind.lib.kth.se:9000/webhook
-          webhook_url: https://sites.lib.kth.se/webhook/hook
+          webhook_url: https://api.lib.kth.se/webhook/hook
           ## ${{ secrets.WEBHOOK_URL }}
           webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
           data: '{ "action": "deploy", "drink" : "beer" }'
