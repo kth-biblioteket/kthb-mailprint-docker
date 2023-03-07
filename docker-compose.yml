@@ -3,15 +3,14 @@ version: "3.6"
 services:
   mailprint:
     container_name: "mailprint"
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/kth-biblioteket/kthb-mailprint-docker:main
+    env_file:
+      - ./.env
     networks:
       - "apps-net"
     restart: "always"
     volumes:
-      - "~/maildir:/maildir"
-      - "./mailprint.env:/app/.env"
+      - "/home/kthb/maildir:/maildir"
 
 networks:
   apps-net:

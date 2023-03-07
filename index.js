@@ -104,7 +104,7 @@ async function main() {
                     //outgoing_mail_message.html = `<p>unlink error: ${error}</p>`;
                     console.log(error)
                 }
-                logger.log('info','File ' + appdir + maildir + path + ' removed successfully.');
+                logger.log('info','File ' + path.join(maildirPath, 'new', filename) + ' removed successfully.');
                 console.log('info', 'File ' + path.join(maildirPath, 'new', filename) + ' removed successfully.')
             });
 
