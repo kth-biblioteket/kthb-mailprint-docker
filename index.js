@@ -8,7 +8,7 @@ const { exec } = require('child_process');
 const process = require("process");
 const winston = require('winston');
 
-const maildirPath = '/maildir';
+const maildirPath = process.env.MAILDIR;
 
 const newMailFiles = fs.readdirSync(path.join(maildirPath, 'new'));
 
@@ -55,9 +55,13 @@ function cmd(...command) {
 }
 
 async function main() {
-    await cmd("cupsd");
-    await cmd(`lpadmin -p alma-hb -v smb://${process.env.PRINTER_USER}:${process.env.PRINTER_PASSWORD}@${process.env.USER_DOMAIN}/${process.env.HB_PRINTER_ADDRESS}/${process.env.HB_PRINTER_NAME} -E`);
-    console.log("This must happen last.");
+    console.log("Mailprint service running...");
+
+    if(process.env.OS == "linux") {
+        await cmd("cupsd");
+        await cmd(`lpadmin -p alma-hb -v smb://${process.env.PRINTER_USER}:${process.env.PRINTER_PASSWORD}@${process.env.USER_DOMAIN}/${process.env.HB_PRINTER_ADDRESS}/${process.env.HB_PRINTER_NAME} -E`);
+        console.log("This must happen last.");
+    }
 
     const watcher = chokidar.watch(".", {
         cwd: path.join(maildirPath, 'new'),
@@ -81,6 +85,13 @@ async function main() {
             } else {
                 incomingmailcontent = parsed.text
             }
+            fs.writeFile(maildirPath + '/' + filename +  '.html', incomingmailcontent, function(error){ 
+                if (error) {
+                    logger.log('error',`watcher.on.add.writefile: ${error}`)
+                    //outgoing_mail_message.text = `Watcher error: ${error}`;
+                    //outgoing_mail_message.html = `<p>Watcher error: ${error}</p>`;
+                }
+            });
             var printmargin = {
                 top: "1.00cm",
                 right: "1.00cm",
@@ -88,7 +99,7 @@ async function main() {
                 left: "1.00cm",
             };
 
-            const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
+            const browser = await puppeteer.launch({ headless: false, args: ['--no-sandbox'] });
             const page = await browser.newPage();
 
             await page.setContent(incomingmailcontent);
@@ -97,6 +108,14 @@ async function main() {
             await page.pdf({ format: "a5", path: maildirPath + '/' + filename + '.pdf', margin: printmargin });
 
             await browser.close();
+            fs.copyFile(path.join(maildirPath, 'new', filename), path.join(maildirPath, filename) , (error) => {
+                if (error) {
+                    logger.log('error',`watcher.on.add.source.on.open.printer.onjobend.copyfile.html: ${error}`);
+                } else {
+                    logger.log('info', path.join(maildirPath, 'new', filename) +'copied to ' + path.join(maildirPath, filename));
+
+                }
+            });
             fs.unlink(path.join(maildirPath, 'new', filename), function (error) {
                 if (error) {
                     logger.log('error',`watcher.on.add.source.on.open.printer.onjobend.unlink.emailfile: ${error}`);
@@ -110,15 +129,17 @@ async function main() {
 
 
             // Print a file using a specific printer
-            console.log('lp -d alma-hb ' + maildirPath + '/' + filename + '.pdf')
-            exec('lp -d alma-hb ' + maildirPath + '/' + filename + '.pdf', (error, stdout, stderr) => {
-                if (error) {
-                    console.error(`exec error: ${error}`);
-                    return;
-                }
-                console.log(`stdout: ${stdout}`);
-                console.error(`stderr: ${stderr}`);
-            });
+            if(process.env.OS == "linux") {
+                console.log('lp -d alma-hb ' + maildirPath + '/' + filename + '.pdf')
+                exec('lp -d alma-hb ' + maildirPath + '/' + filename + '.pdf', (error, stdout, stderr) => {
+                    if (error) {
+                        console.error(`exec error: ${error}`);
+                        return;
+                    }
+                    console.log(`stdout: ${stdout}`);
+                    console.error(`stderr: ${stderr}`);
+                });
+            }
 
         })
         .on('remove', async filename => { logger.log('info', 'File ' + filename + ' removed.'); });
