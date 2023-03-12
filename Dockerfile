@@ -16,7 +16,7 @@ RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y cups cups-client smbclient
 
 # RUN sed -i 's/Listen.*/Listen 0.0.0.0:631/g' /etc/cups/cupsd.conf
-RUN sed -i 's/Listen localhost:631/Listen *:631/' /etc/cups/cupsd.conf
+RUN sed -i 's/Listen.* /Listen *:631/g' /etc/cups/cupsd.conf
 
 # Create the /etc/cups directory and the client.conf file
 # RUN mkdir -p /etc/cups && \
