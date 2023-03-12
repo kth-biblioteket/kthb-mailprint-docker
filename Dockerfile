@@ -17,7 +17,7 @@ RUN apt-get update && \
 
 # RUN echo "Listen 0.0.0.0:631" >> /etc/cups/cupsd.conf
 
-RUN sed -i 's/^Listen localhost:631/Port 631\nListen 0.0.0.0:631/' /etc/cups/cupsd.conf
+RUN sed -i 's/^Listen localhost:631/Port 631\nListen *:631/' /etc/cups/cupsd.conf
 #    sed -i 's/^#WebInterface Yes/WebInterface Yes/' /etc/cups/cupsd.conf && \
 #    echo "Allow all" >> /etc/cups/cupsd.conf
 
