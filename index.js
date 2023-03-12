@@ -102,7 +102,8 @@ async function main() {
             const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
             const page = await browser.newPage();
 
-            await page.setContent(incomingmailcontent);
+            //await page.setContent(incomingmailcontent);
+            await page.goto('file://' + maildirPath + '/' + filename + '.html');
 
             //Skapa pdf-fil
             await page.pdf({ format: "a5", path: maildirPath + '/' + filename + '.pdf', margin: printmargin });
