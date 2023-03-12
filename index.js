@@ -59,6 +59,8 @@ async function main() {
 
     if(process.env.OS == "linux") {
         await cmd("cupsd");
+        await cmd("cupsctl --remote-admin --remote-any");
+        await cmd("cupsctl WebInterface=yes");
         await cmd(`lpadmin -p alma-hb -v smb://${process.env.PRINTER_USER}:${process.env.PRINTER_PASSWORD}@${process.env.USER_DOMAIN}/${process.env.HB_PRINTER_ADDRESS}/${process.env.HB_PRINTER_NAME} -E`);
         console.log("This must happen last.");
     }
