@@ -15,9 +15,9 @@ RUN apt-get update && \
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y cups cups-client smbclient
 
-RUN sed -i 's/^Listen localhost:631/Port 631\nListen 0.0.0.0:631/' /etc/cups/cupsd.conf && \
-    sed -i 's/^#WebInterface Yes/WebInterface Yes/' /etc/cups/cupsd.conf && \
-    echo "Allow all" >> /etc/cups/cupsd.conf
+#RUN sed -i 's/^Listen.*/Port 631\nListen 0.0.0.0:631/' /etc/cups/cupsd.conf && \
+#    sed -i 's/^#WebInterface Yes/WebInterface Yes/' /etc/cups/cupsd.conf && \
+#    echo "Allow all" >> /etc/cups/cupsd.conf
 
 
 # Create the /etc/cups directory and the client.conf file
